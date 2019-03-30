@@ -1,0 +1,40 @@
+
+template <class item> 
+btnode<item>::btnode(const int& keyin, const item &datain, btnode<item>* parentin, btnode<item>* leftchildin, btnode<item>* rightchildin)
+{
+    key=keyin;
+    data=datain;
+    leftchild=leftchildin;
+    rightchild=rightchildin;
+    parent=parentin;
+}
+
+template <class item>
+void btnode<item>::setKey(const int& keyin)
+{
+    key=keyin;
+}
+
+template <class item>
+void btnode<item>::setData(const item& datain)
+{
+    data=datain;
+}
+
+template <class item>
+void btnode<item>::setLeftNode(btnode<item>* leftchildin)
+{
+    leftchild=leftchildin;
+}
+
+template <class item>
+void btnode<item>::setRightNode(btnode<item>* rightchildin)
+{
+    rightchild=rightchildin;
+}
+
+template <class item>
+void btnode<item>::setParentNode(btnode<item>* parentin)
+{
+    parent=parentin;
+}

@@ -1,0 +1,186 @@
+
+template <class item>
+linkedlist<item>::linkedlist()
+{
+    headptr=nullptr;
+    tailptr=nullptr;
+    size=0;
+}
+
+template <class item>
+linkedlist<item>::~linkedlist()
+{
+    removeAll(headptr);
+}
+
+template <class item>
+void linkedlist<item>::insert(const int& keyin, const item& datain)
+{
+    if(size==0)
+    {
+        headptr = new llnode<item>(keyin,datain);
+        tailptr=headptr;
+        size++;
+        return;
+    }
+
+    llnode<item>* current=headptr;
+    while(current!=nullptr)
+    {
+        if(current->getKey()==keyin)
+        {
+            current->setData(datain);
+            return;
+        }
+        current=current->getNext();
+    }
+
+    llnode<item>* newllnode = new llnode<item>(keyin,datain,nullptr,tailptr);
+    tailptr->setNextNode(newllnode);
+    tailptr=newllnode;
+    size++;
+    return;
+}
+
+template <class item>
+void linkedlist<item>::remove(const int& keyrm)
+{
+    llnode<item>* current=headptr;
+    for(size_t i=0; i<size; i++)
+    {
+        if(current->getKey()==keyrm)
+        {
+            if(size==1)
+            {
+                clearList();
+                return;
+            }
+            if(current->getPrevious()==nullptr)
+            {
+                removeHead();
+                return;
+            }
+            if(current->getNext()==nullptr)
+            {
+                removeTail();
+                return;
+            }
+            current->getNext()->setPreviousNode(current->getPrevious());
+            current->getPrevious()->setNextNode(current->getNext());
+            delete current;
+            size--;
+            return;
+        }
+        current=current->getNext();
+    }
+}
+
+template <class item>
+item linkedlist<item>::retrieve(const int& keyin)
+{
+    llnode<item>* current=headptr;
+    while(current!=nullptr)
+    {
+        if(current->getKey()==keyin)
+        {
+            return current->getData();
+        }
+        current=current->getNext();
+    }
+}
+
+template<class item> 
+void linkedlist<item>::copyTo(binarytree<item>& treein)
+{
+    llnode<item>* current=headptr;
+    while(current!=nullptr)
+    {
+        treein.insert(current->getKey(),current->getData());
+        current=current->getNext();
+    }
+}
+
+template <class item>
+void linkedlist<item>::clearList()
+{
+    removeAll(headptr);
+    headptr=nullptr;
+    tailptr=nullptr;
+    size=0;
+}
+
+template <class item>
+bool linkedlist<item>::search(const int& keyin)
+{
+    bool check=false;
+    llnode<item>* current=headptr;
+    while(current!=nullptr)
+    {
+        if(current->getKey()==keyin)
+        {
+            check=true;
+        }
+        current=current->getNext();
+    }
+    return check;
+}
+
+template <class item>
+int linkedlist<item>::getLast()
+{
+    return tailptr->getKey();
+}
+
+template <class item>
+std::ostream& operator<<(std::ostream& outs, const linkedlist<item>& l)
+{
+    if(l.size==0)
+    {
+        outs<<"{} Size: 0";
+        return outs;
+    }
+    outs<<"{";
+    if(l.headptr!=nullptr)
+    {
+        llnode<item>* current=l.headptr;
+        while(current->getNext()!=nullptr)
+        {
+            outs<<current->getKey()<<":"<<current->getData()<<", ";
+            current=current->getNext();
+        }
+        outs<<current->getKey()<<":"<<current->getData();
+    }
+    outs<<", } Size: "<<l.size;
+    return outs;
+}
+
+template <class item>
+void linkedlist<item>::removeAll(llnode<item>* headptrin)
+{
+    if(headptrin==nullptr)
+    {
+        return;
+    }
+    removeAll(headptrin->getNext());
+    delete headptrin;
+}
+
+template <class item>
+void linkedlist<item>::removeHead()
+{
+    llnode<item>* tmp=headptr;
+    headptr=headptr->getNext();
+    headptr->setPreviousNode(nullptr);
+    delete tmp;
+    size--;
+}
+
+template <class item>
+void linkedlist<item>::removeTail()
+{
+    llnode<item>* tmp=tailptr;
+    tailptr=tailptr->getPrevious();
+    tailptr->setNextNode(nullptr);
+    delete tmp;
+    size--;
+}

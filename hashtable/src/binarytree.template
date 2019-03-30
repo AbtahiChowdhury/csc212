@@ -1,0 +1,311 @@
+
+template <class item>
+binarytree<item>::binarytree()
+{
+    root=nullptr;
+    size=0;
+}
+
+template <class item>
+binarytree<item>::~binarytree()
+{
+    removeAll(root);
+}
+
+template <class item>
+void binarytree<item>::insert(const int& keyin, const item& datain)
+{
+    if(root==nullptr)
+    {
+        root = new btnode<item>(keyin,datain);
+        size++;
+    }
+
+    btnode<item>* location=nullptr;
+    searchRecursion(root,keyin,location);
+    if(location!=nullptr)
+    {
+        location->setData(datain);
+        return;
+    }
+
+    insertRecursion(root,keyin,datain);
+    size++;
+}
+
+template <class item>
+void binarytree<item>::remove(const int& keyrm)
+{
+    btnode<item>* rm=nullptr;
+    searchRecursion(root,keyrm,rm);
+    if(rm!=nullptr && rm->getKey()==root->getKey() && root->getLeft()==nullptr && root->getRight()==nullptr)
+    {
+        clearTree();
+        return;
+    }
+    if(rm!=nullptr)
+    {
+        if(rm->getLeft()==nullptr && rm->getRight()==nullptr)
+        {
+            btnode<item>* parentrm=rm->getParent();
+            if(parentrm->getLeft()->getKey()==keyrm)
+            {
+                parentrm->setLeftNode(nullptr);
+            }
+            else
+            {
+                parentrm->setRightNode(nullptr);
+            }
+            delete rm;
+            size--;
+            return;
+        }
+        if(rm->getLeft()==nullptr || rm->getRight()==nullptr)
+        {
+            if (rm->getLeft()!=nullptr)
+            {
+                if(rm->getParent()==nullptr)
+                {
+                    root=rm->getLeft();
+                    root->setParentNode(nullptr);
+                    delete rm;
+                    size--;
+                    return;
+                }
+                btnode<item>* parentrm=rm->getParent();
+                rm->getLeft()->setParentNode(parentrm);
+                if(parentrm->getLeft()!=nullptr && parentrm->getLeft()->getKey()==keyrm)
+                {
+                    parentrm->setLeftNode(rm->getLeft());
+                }
+                else
+                {
+                    parentrm->setRightNode(rm->getLeft());
+                }
+                delete rm;
+                size--;
+                return;
+            }
+            else
+            {
+                if(rm->getParent()==nullptr)
+                {
+                    root=rm->getRight();
+                    root->setParentNode(nullptr);
+                    delete rm;
+                    size--;
+                    return;
+                }
+                btnode<item>* parentrm=rm->getParent();
+                rm->getRight()->setParentNode(parentrm);
+                if(parentrm->getLeft()!=nullptr && parentrm->getLeft()->getKey()==keyrm)
+                {
+                    parentrm->setLeftNode(rm->getRight());
+                }
+                else
+                {
+                    parentrm->setRightNode(rm->getRight());
+                }
+                delete rm;
+                size--;
+                return;
+            }
+        }
+        btnode<item>* switchrm;
+        getSuccessor(rm->getRight(),switchrm);\
+        rm->setKey(switchrm->getKey());
+        rm->setData(switchrm->getData());
+        if(switchrm->getRight()==nullptr)
+        {
+            if(switchrm->getParent()->getLeft()!=nullptr && switchrm->getParent()->getLeft()->getKey()==keyrm)
+            {
+                switchrm->getParent()->setLeftNode(nullptr);
+            }
+            else
+            {
+                switchrm->getParent()->setRightNode(nullptr);
+            }
+            delete switchrm;
+            size--;
+            return;
+        }
+        else
+        {
+            if(switchrm->getParent()->getParent()==nullptr)
+            {
+                switchrm->getRight()->setParentNode(rm);
+                rm->setRightNode(switchrm->getRight());
+            }
+            else
+            {
+                switchrm->getRight()->setParentNode(switchrm->getParent());
+                switchrm->getParent()->setLeftNode(switchrm->getRight());
+            }
+            delete switchrm;
+            size--;
+            return;
+        }
+    }
+
+}
+
+template<class item>
+item binarytree<item>::retrieve(const int &keyin)
+{
+    btnode<item>* location=nullptr;
+    searchRecursion(root,keyin,location);
+    if(location!=nullptr)
+    {
+        return location->getData();
+    }
+}
+
+template<class item>
+void binarytree<item>::copyTo(linkedlist<item> &listin)
+{
+    copyRecursion(root,listin);
+}
+
+template<class item>
+void binarytree<item>::copyRecursion(btnode<item> *rootin, linkedlist<item> &listin)
+{
+    if(rootin==nullptr)
+    {
+        return;
+    }
+    copyRecursion(rootin->getLeft(),listin);
+    listin.insert(rootin->getKey(),rootin->getData());
+    copyRecursion(rootin->getRight(),listin);
+}
+
+
+template <class item>
+void binarytree<item>::insertRecursion(btnode<item>* rootin, const int& keyin, const item& datain)
+{
+    if(keyin<rootin->getKey())
+    {
+        if(rootin->getLeft()==nullptr)
+        {
+            btnode<item>* newbtnode = new btnode<item>(keyin,datain,rootin);
+            rootin->setLeftNode(newbtnode);
+            return;
+        }
+        else
+        {
+            insertRecursion(rootin->getLeft(),keyin,datain);
+        }
+    }
+    else
+    {
+        if(rootin->getRight()==nullptr)
+        {
+            btnode<item>* newbtnode = new btnode<item>(keyin,datain,rootin);
+            rootin->setRightNode(newbtnode);
+            return;
+        }
+        else
+        {
+            insertRecursion(rootin->getRight(),keyin,datain);
+        }
+    }
+}
+
+template <class item>
+void binarytree<item>::searchRecursion(btnode<item>* rootin, const int& keyin, btnode<item>*& location)
+{
+    if(rootin==nullptr)
+    {
+        return;
+    }
+    if(rootin->getKey()==keyin)
+    {
+        location=rootin;
+        return;
+    }
+    searchRecursion(rootin->getLeft(),keyin,location);
+    searchRecursion(rootin->getRight(),keyin,location);
+}
+
+template <class item>
+void binarytree<item>::getSuccessor(btnode<item>* rootin, btnode<item>*& location)
+{
+    if(rootin->getLeft()==nullptr)
+    {
+        location=rootin;
+        return;
+    }
+    getSuccessor(rootin->getLeft(),location);
+}
+
+template <class item>
+void binarytree<item>::clearTree()
+{
+    removeAll(root);
+    root=nullptr;
+    size=0;
+}
+
+template<class item> 
+bool binarytree<item>::search(const int &keyin)
+{
+    btnode<item>* location=nullptr;
+    searchRecursion(root,keyin,location);
+    if(location==nullptr)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
+}
+
+
+template<class item>
+int binarytree<item>::getLast()
+{
+    btnode<item>* current=root;
+    while(current->getRight()!=nullptr)
+    {
+        current=current->getRight();
+    }
+    return current->getKey();
+}
+
+
+template <class item>
+void binarytree<item>::removeAll(btnode<item>* rootin)
+{
+    if(rootin!=nullptr)
+    {
+        removeAll(rootin->getLeft());
+        removeAll(rootin->getRight());
+        delete rootin;
+    }
+}
+
+template <class item>
+std::ostream& operator<<(std::ostream& outs, const binarytree<item>& b)
+{
+    outs<<"{";
+    b.print(outs);
+    outs<<"}";
+    return outs;
+}
+
+template <class item>
+void binarytree<item>::inOrderPrint(btnode<item>* rootin, std::ostream& outs) const
+{
+    if(rootin!=nullptr)
+    {
+        inOrderPrint(rootin->getLeft(),outs);
+        outs<<rootin->getKey()<<":"<<rootin->getData()<<", ";
+        inOrderPrint(rootin->getRight(),outs);
+    }
+}
+
+template <class item>
+void binarytree<item>::print(std::ostream& outs) const
+{
+    inOrderPrint(root,outs);
+}

@@ -1,0 +1,98 @@
+#include <string>
+#include "hashtable.h"
+using namespace std;
+
+int main()
+{
+	hashtable<string> h(15);
+	h.insert(81,"Cocytus");
+	h.insert(672,"Victim");
+	h.insert(3363,"Gargantua");
+	h.insert(9014,"Sebas Tian");
+	h.insert(355,"Solution Epsilon");
+	h.insert(516,"Entoma Vasilissa Zeta");
+	h.insert(257,"Lakyus Alvein Dale Aindra");
+	h.insert(498,"Zesshi Zetsumei");
+	h.insert(819,"Ainz Ooal Gown");
+	h.insert(9010,"Ulbert Alain Odle");
+	cout<<h<<endl;
+	h.insert(10011,"Renner Theiere Chardelon Ryle Vaiself");
+	h.insert(1122,"Shalltear Bloodfallen");
+	h.insert(1223,"Aura Bella Fiora");
+	h.insert(2234,"Mare Bella Fiora");
+	h.insert(275,"Demiurge");
+	h.insert(169856,"Albedo");
+	h.insert(59657,"Pandora's Actor");
+	h.insert(376568,"Yuri Alpha");
+	h.insert(6567569,"Lupusregina Beta");
+	h.insert(4363670,"Narberal Gamma");
+	cout<<h<<endl;
+	h.insert(17856851,"CZ Delta");
+	h.insert(9364572,"Evileye");
+	h.insert(86753,"Rimuru Tempest");
+	h.insert(76544,"Veldora");
+	h.insert(65165,"Veldanava");
+	h.insert(53416,"Ranga");
+	h.insert(84127,"Xion");
+	h.insert(4946318,"Souei");
+	h.insert(549649,"Milim Nava");
+	h.insert(51890,"Guy Crimson");
+	cout<<h<<endl;
+	h.insert(16821,"Ramiris");
+	h.insert(35182,"Dagrule");
+	h.insert(516513,"Ruminas Valentine");
+	h.insert(5414,"Leon Cromwell");
+	h.insert(351545,"Chloe O'Bell");
+	h.insert(51206,"Velgrynd");
+	h.insert(41447,"Ciel");
+	h.insert(56468,"Velzado");
+	h.insert(3464579,"Asmodeus");
+	h.insert(456360,"Beelzebub");
+	cout<<h<<endl;
+	h.insert(5674571,"Mammon");
+	h.insert(35674572,"Belphegor");
+	h.insert(19874563,"Metatron");
+	h.insert(4517874,"Uriel");
+	h.insert(5675,"Sariel");
+	h.insert(98656,"Nodens");
+	h.insert(6837,"Cthugha");
+	h.insert(9866548,"Yog-Sothoth Hortz");
+	h.insert(789219,"Azathoth");
+	h.insert(132050,"Nyarlathotep");
+	cout<<h<<endl;
+	h.insert(25151,"Hastur");
+	h.insert(546912,"Tia");
+	h.insert(1931653,"Tina");
+	h.insert(431684,"Gagaran");
+	h.insert(135925,"Tuareninya Veyron");
+	h.insert(13596,"Brain Unglaus");
+	h.insert(421617,"Gazef Stronoff");
+	h.insert(164818,"Momonga");
+	h.insert(139159,"Nishikienrai");
+	h.insert(43160,"Peroroncino");
+	cout<<h<<endl;
+	h.insert(1967581,"Tabula Smaragdina");
+	h.insert(1531482,"Genjiro");
+	h.insert(79353,"Temperance");
+	h.insert(9454,"Kyouhukou");
+	h.insert(3575,"Cixous");
+	h.insert(8406,"Foire");
+	h.insert(2367,"Rubedo");
+	h.insert(18458,"Jircniv Rune Farlord El Nix");
+	h.insert(23569,"Calca Bessarez");
+	h.insert(8560,"Neia Baraja");
+	cout<<h.retrieve(819)<<endl;
+	cout<<h<<endl;
+
+	h.remove(10011);
+	h.remove(3363);
+	h.remove(65165);
+	h.remove(257);
+	h.remove(1122);
+	h.remove(498);
+	h.remove(9364572);
+	cout<<h<<endl;
+
+	h.clearTable();
+	cout<<h<<endl;
+}

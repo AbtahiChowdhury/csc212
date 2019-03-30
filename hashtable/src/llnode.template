@@ -1,0 +1,33 @@
+
+template <class item>
+llnode<item>::llnode(const int& keyin, const item& datain, llnode<item>* nextin, llnode<item>* previn)
+{
+    key=keyin;
+    data=datain;
+    next=nextin;
+    prev=previn;
+}
+
+template <class item>
+void llnode<item>::setKey(const int& keyin)
+{
+    key=keyin;
+}
+
+template <class item>
+void llnode<item>::setData(const item& datain)
+{
+    data=datain;
+}
+
+template <class item>
+void llnode<item>::setNextNode(llnode<item>* nextin)
+{
+    next=nextin;
+}
+
+template <class item>
+void llnode<item>::setPreviousNode(llnode<item>* previn)
+{
+    prev=previn;
+}

@@ -1,0 +1,159 @@
+
+template <class item>
+hashtable<item>::hashtable(const int& capacityin)
+{
+    capacity=capacityin;
+    initialcapacity=capacityin;
+    totalsizeoftable=0;
+    data=new hashbucket<item>*[capacity];
+    for(int i=0; i<capacity; i++)
+    {
+        data[i]=new hashbucket<item>();
+    }
+    loadfactor=0;
+    multiplier=0;
+}
+
+template <class item>
+hashtable<item>::~hashtable()
+{
+    for(size_t i=0; i<capacity; i++)
+    {
+        delete data[i];
+    }
+    delete[] data;
+}
+
+template<class item>
+void hashtable<item>::insert(const int &keyin, const item &datain)
+{
+    int index=hashFunction(keyin);
+    int indextoinsert=index;
+    int cap=0;
+    for(int i=0; i<multiplier+1; i++)
+    {
+        if(data[index+cap]->search(keyin))
+        {
+            data[index+cap]->insert(keyin,datain);
+            return;
+        }
+        cap+=initialcapacity;
+    }
+    cap=0;
+    for(int i=0; i<multiplier; i++)
+    {
+        cap+=initialcapacity;
+        if(data[indextoinsert]->getSize()>=data[index+cap]->getSize())
+        {
+            indextoinsert=index+cap;
+        }
+    }
+    data[indextoinsert]->insert(keyin,datain);
+    totalsizeoftable++;
+    updateLoadFactor();
+    rehash();
+}
+
+template<class item>
+void hashtable<item>::remove(const int &keyrm)
+{
+    int index=hashFunction(keyrm);
+    int cap=0;
+    int steps=multiplier+1;
+    for(int i=0; i<steps; i++)
+    {
+        if(data[index+cap]->search(keyrm))
+        {
+            data[index+cap]->remove(keyrm);
+            totalsizeoftable--;
+            updateLoadFactor();
+        }
+        cap+=initialcapacity;
+    }
+}
+
+template<class item>
+item hashtable<item>::retrieve(const int &keyin)
+{
+    int index=hashFunction(keyin);
+    int cap=0;
+    int steps=multiplier+1;
+    for(int i=0; i<steps; i++)
+    {
+        if(data[index+cap]->search(keyin))
+        {
+            return data[index+cap]->retrieve(keyin);
+        }
+        cap+=initialcapacity;
+    }
+}
+
+template<class item>
+void hashtable<item>::clearTable()
+{
+    for(int i=0; i<capacity; i++)
+    {
+        data[i]->emptyBucket();
+    }
+    totalsizeoftable=0;
+    updateLoadFactor();
+}
+
+template<class item>
+int hashtable<item>::hashFunction(const int &keyin)
+{
+    return keyin%initialcapacity;
+}
+
+template<class item>
+void hashtable<item>::updateLoadFactor()
+{
+    loadfactor=totalsizeoftable/capacity;
+}
+
+template<class item>
+void hashtable<item>::rehash()
+{
+    if(loadfactor>1)
+    {
+        hashbucket<item>** newdata=new hashbucket<item>*[capacity*2];
+        for(int i=0; i<capacity; i++)
+        {
+            newdata[i]=data[i];
+        }
+        for(int i=capacity; i<capacity*2; i++)
+        {
+            newdata[i]=new hashbucket<item>();
+        }
+        delete[] data;
+        data=newdata;
+        multiplier++;
+        for(int i=0; i<capacity; i++)
+        {
+            if(data[i]->getSize()>1)
+            {
+                for(size_t j=0; j<(data[i]->getSize())/2; j++)
+                {
+                    int keyswap=data[i]->getLast();
+                    item dataswap=data[i]->retrieve(keyswap);
+                    data[i]->remove(keyswap);
+                    data[i+capacity]->insert(keyswap,dataswap);
+                }
+            }
+        }
+        capacity*=2;
+    }
+}
+
+template <class item>
+std::ostream &operator<<(std::ostream &outs, const hashtable<item>& h)
+{
+    outs<<"{"<<std::endl;
+    for(int i=0; i<h.capacity; i++)
+    {
+        outs<<"\t"<<i<<": "<<*(h.data[i])<<std::endl;
+    }
+    outs<<"}"<<std::endl;
+    return outs;
+}
+

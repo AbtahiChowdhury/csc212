@@ -1,0 +1,148 @@
+
+template <class item>
+hashbucket<item>::hashbucket()
+{
+    listtype=true;
+    list=new linkedlist<item>;
+    tree=new binarytree<item>;
+}
+
+template <class item>
+hashbucket<item>::~hashbucket()
+{
+    delete list;
+    delete tree;
+}
+
+template <class item>
+size_t hashbucket<item>::getSize() const
+{
+    if (listtype)
+    {
+        return list->getSize();
+    }
+    else
+    {
+        return tree->getSize();
+    }
+}
+
+template <class item>
+void hashbucket<item>::insert(const int& keyin, const item& datain)
+{
+    if (listtype)
+    {
+        list->insert(keyin,datain);
+        if(list->getSize()>=12)
+        {
+            switchDataStructure();
+            listtype=false;
+        }
+    }
+    else
+    {
+        tree->insert(keyin,datain);
+    }
+}
+
+template <class item>
+void hashbucket<item>::remove(const int& keyrm)
+{
+    if (listtype)
+    {
+        list->remove(keyrm);
+    }
+    else
+    {
+        tree->remove(keyrm);
+        if(tree->getSize()<=7)
+        {
+            switchDataStructure();
+            listtype=true;
+        }
+    }
+}
+
+template <class item>
+item hashbucket<item>::retrieve(const int& keyin)
+{
+    if(listtype)
+    {
+        return list->retrieve(keyin);
+    }
+    else
+    {
+        return tree->retrieve(keyin);
+    }
+}
+
+template <class item>
+bool hashbucket<item>::search(const int& keyin)
+{
+    if(listtype)
+    {
+        return list->search(keyin);
+    }
+    else
+    {
+        return tree->search(keyin);
+    }
+}
+
+template <class item>
+int hashbucket<item>::getLast()
+{
+    if(listtype)
+    {
+        return list->getLast();
+    }
+    else
+    {
+        return tree->getLast();
+    }
+}
+
+template <class item>
+void hashbucket<item>::emptyBucket()
+{
+    if(listtype)
+    {
+        list->clearList();
+    }
+    else
+    {
+        tree->clearTree();
+        listtype=true;
+    }
+}
+
+template <class item>
+void hashbucket<item>::switchDataStructure()
+{
+    if (listtype)
+    {
+        list->copyTo(*(tree));
+        list->clearList();
+        listtype=false;
+    }
+    else
+    {
+        tree->copyTo(*(list));
+        tree->clearTree();
+        listtype=true;
+    }
+}
+
+template <class item>
+std::ostream& operator<<(std::ostream& outs, const hashbucket<item>& h)
+{
+    if(h.listtype)
+    {
+        outs<<*(h.list);
+    }
+    else
+    {
+        outs<<*(h.tree);
+    }
+    return outs;
+}
